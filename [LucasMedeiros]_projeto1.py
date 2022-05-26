@@ -45,6 +45,7 @@ def produto_mais_caro(dados: list, categoria: str) -> dict:
     O parâmetro "categoria" é uma string contendo o nome de uma categoria.
     Essa função deverá retornar um dicionário representando o produto mais caro da categoria dada.
     '''
+
     valor_caro = 0
 
     for i in range(0, len(dados)):
@@ -63,20 +64,17 @@ def produto_mais_barato(dados: list, categoria: str) -> dict:
     '''
     cont = 0
 
-    if dados[0]['categoria'] == categoria:
-        valor_barato = float(dados[0]['preco'])
-
-    while not (dados[cont]['categoria'] == categoria):
-        valor_barato = float(dados[cont]['preco'])
+    while cont < len(dados):
+        if dados[cont]['categoria'].upper() == categoria:
+            valor_barato = float(dados[cont]['preco'])
+            break
         cont += 1
-    else:
-        for i in range(0, len(dados)):
+    for i in range(0, len(dados)):
+        if float(dados[i]['preco']) < valor_barato and dados[i]['categoria'].upper() == categoria:
+            valor_barato = float(dados[i]['preco'])
+            produto_barato = dados[i]
 
-            if float(dados[i]['preco']) < valor_barato and dados[i]['categoria'].upper() == categoria:
-                valor_barato = float(dados[i]['preco'])
-                produto_barato = dados[i]
-
-        return produto_barato
+    return produto_barato
 
 def top_10_caros(dados: list) -> list:
     '''
@@ -95,6 +93,55 @@ def top_10_baratos(dados: list) -> list:
     lista = sorted(dados, key = lambda x: float(x['preco']))[0:10]
     return (lista)
 
+def print_formatado(resposta: list | dict) -> None:
+    '''
+    O parâmetro "resposta" pode ser do tipo lista ou do tipo dicionário.
+    Essa função deverá imprimir na tela os produtos, formatados com boa visualização para o usuário.
+    '''
+
+    if type(resposta) == list:
+        for i in range(0, len(resposta)):
+            print(f'{i + 1}. {resposta[i]}')
+    else:
+        print(resposta)
+
+    print('~*' * 21 + '~')
+
+def valida_entrada_numerica(numero: str) -> str:
+    '''
+    O parâmetro número deverá ser do tipo str
+    Essa função deverá assegurar que o usuário optou por uma escolha correta, caso contrário solicitará um input
+    até que o usuário preencha corretamente. O retorno da função é um str'''
+
+    opcoes = ['0', '1', '2', '3', '4', '5', '6']
+
+    if numero in opcoes:
+
+        pass
+
+    else:
+        while not numero.isdigit() or numero not in opcoes:
+
+            numero = input('\nVocê digitou uma opção inválida!\nQual opção você deseja escolher? ')
+
+    return numero
+
+def valida_entrada_categoria(categoria):
+    '''
+    O parâmetro número deverá ser do tipo str
+    Essa função deverá assegurar que o usuário optou por uma categoria existente, caso contrário solicitará um input
+    até que o usuário preencha corretamente. O retorno da função é um str'''
+
+    opcoes = listar_categorias(dados)
+
+    if categoria in opcoes:
+        pass
+    else:
+        while (categoria not in opcoes):
+
+            categoria = input('\nVocê digitou uma categoria inexistente!\nDigite uma categoria correta! ').upper()
+
+    return categoria
 
 def menu(dados: list) -> None:
     '''
@@ -127,36 +174,32 @@ def menu(dados: list) -> None:
 
     numero = input('Qual opção você deseja escolher? ')
     print()
-    opcoes = ['0', '1', '2', '3', '4', '5', '6']
 
     while not (numero == '0'):
-        while not (numero.isdigit() and numero in opcoes):
-            numero = input('\nVocê digitou uma opção inválida!\nQual opção você deseja escolher? ')
-            print()
-        else:
-            if numero == '1':
+
+        numero = valida_entrada_numerica(numero)
+
+        if numero == '2' or numero == '3' or numero == '4':
+
+            categoria = input('\nQual categoria você deseja escolher? ').upper()
+
+            valida_entrada_categoria(categoria)
+
+        if numero == '1':
                 resposta = listar_categorias(dados)
-            elif numero == '2':
-                categoria = input('\nQual categoria você deseja escolher? ').upper()
+        elif numero == '2':
                 resposta = listar_por_categoria(dados, categoria)
-            elif numero == '3':
-                categoria = input('\nQual categoria você deseja escolher? ').upper()
+        elif numero == '3':
                 resposta = produto_mais_caro(dados, categoria)
-            elif numero == '4':
-                categoria = input('\nQual categoria você deseja escolher? ').upper()
+        elif numero == '4':
                 resposta = produto_mais_barato(dados, categoria)
-            elif numero == '5':
+        elif numero == '5':
                 resposta = top_10_caros(dados)
-            elif numero == '6':
+        elif numero == '6':
                 resposta = top_10_baratos(dados)
 
-        if type(resposta) == list:
-            for i in range(0, len(resposta)):
-                print(resposta[i])
-        else:
-            print(resposta)
+        print_formatado(resposta)
 
-        print('~*' * 21 + '~')
         numero = input('\nQual opção você deseja agora? ')
     print('\nObrigado por usar o nosso programa! FIM!')
 
