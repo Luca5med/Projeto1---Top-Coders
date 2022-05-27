@@ -62,6 +62,7 @@ def produto_mais_barato(dados: list, categoria: str) -> dict:
     O parâmetro "categoria" é uma string contendo o nome de uma categoria.
     Essa função deverá retornar um dicionário representando o produto mais caro da categoria dada.
     '''
+
     cont = 0
 
     while cont < len(dados):
@@ -70,7 +71,7 @@ def produto_mais_barato(dados: list, categoria: str) -> dict:
             break
         cont += 1
     for i in range(0, len(dados)):
-        if float(dados[i]['preco']) < valor_barato and dados[i]['categoria'].upper() == categoria:
+        if float(dados[i]['preco']) <= valor_barato and dados[i]['categoria'].upper() == categoria:
             valor_barato = float(dados[i]['preco'])
             produto_barato = dados[i]
 
@@ -183,7 +184,7 @@ def menu(dados: list) -> None:
 
             categoria = input('\nQual categoria você deseja escolher? ').upper()
 
-            valida_entrada_categoria(categoria)
+            categoria = valida_entrada_categoria(categoria)
 
         if numero == '1':
                 resposta = listar_categorias(dados)
